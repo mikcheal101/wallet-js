@@ -1,7 +1,7 @@
 import Database from "./database";
 import DatabaseType from "./databasetypes";
 import MongoDbDatabase from "./mongodb.database";
-import MysqlDatabase from "./mysql.database";
+import Mysql2 from "./mysql2.database";
 
 class DatabaseDirector {
 
@@ -16,7 +16,7 @@ class DatabaseDirector {
             case DatabaseType.MySql:
             default:
 
-                database = new MysqlDatabase();
+                database = new Mysql2();
                 break;
         }
 

@@ -1,17 +1,17 @@
 import MySql from "mysql"
 import Database from "./database";
+import IDatabaseQuery from "./idatabasequery.type";
 
 class MysqlDatabase extends Database {
 
-    public isConnected(): boolean {
-        return MysqlDatabase._connected;
+    public executeQueries(queries: IDatabaseQuery[]): Promise<boolean> {
+        throw new Error("Method not implemented.");
     }
 
-    protected configure(): boolean {
+    protected async configure(): Promise<boolean> {
         try {
-            // lazy loading mysql connection only when needed
-            if (!MysqlDatabase._connected) {
-                MysqlDatabase._connection = MySql.createConnection({
+            if (!Database._connected) {
+                Database._connection = await MySql.createConnection({
                     host: process.env.DB_HOST,
                     user: process.env.DB_USER,
                     password: process.env.DB_PASS,
@@ -19,15 +19,16 @@ class MysqlDatabase extends Database {
                 });
             }
             return true;
-        } catch (_) {
-            return false;
-        }
+        } catch (_) { }
+
+        return false;
     }
 
-    public connect(): boolean {
-        if (MysqlDatabase._connection && !MysqlDatabase._connected) {
+    public async connect(): Promise<boolean> {
+        if (Database._connection && !Database._connected) {
             try {
-                MysqlDatabase._connection.connect();
+                await Database._connection.connect();
+                Database._connected = true;
                 return true;
             }
             catch { }
@@ -35,10 +36,11 @@ class MysqlDatabase extends Database {
         return false;
     }
 
-    disconnect(): boolean {
-        if (MysqlDatabase._connection && MysqlDatabase._connected) {
+    public async disconnect(): Promise<boolean> {
+        if (Database._connection && Database._connected) {
             try {
-                MysqlDatabase._connection.destroy();
+                Database._connection.destroy();
+                Database._connected = false;
                 return true;
             } catch { }
         }
@@ -46,20 +48,21 @@ class MysqlDatabase extends Database {
         return false;
     }
 
-    query(queryStr: string) {
+    public async query(queryStr: string, params?: any[]): Promise<any[]> {
         let resultSet: any[] = [];
-        
-        if (MysqlDatabase._connected) {
-            
-            MysqlDatabase._connection.query(queryStr, (err: MySql.MysqlError, results: any[]) => {
-                console.log("Error: ", err);
-                console.log("results: ", results);
-            });
+
+        if (Database._connected) {
+
+            Database._connection.query(queryStr, (err: MySql.MysqlError, results: any[]) => { });
 
             this.disconnect();
         }
 
         return resultSet;
+    }
+
+    public execute(queryStr: string, params?: any[] | undefined): Promise<boolean> {
+        throw new Error("Method not implemented.");
     }
 };
 
