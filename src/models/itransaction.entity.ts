@@ -8,7 +8,7 @@ interface ITransaction {
     amount: number;
     account: IAccount;
     status: TransactionStatus;
-    channel: Channels
+    channel: Channel
 };
 
 export default ITransaction;

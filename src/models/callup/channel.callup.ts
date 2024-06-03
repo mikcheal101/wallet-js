@@ -3,8 +3,10 @@
  * In production it is best practice to place
  * "Channels" in a callup table.
  */
-enum Channels {
+enum Channel {
     ATM = 0,
     POS,
     WEB
-}
+};
+
+export default Channel;

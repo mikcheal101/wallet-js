@@ -1,3 +1,4 @@
+import IAccountStatus from "./accountstatus.entity";
 import ICustomer from "./icustomer.entity";
 import ITransaction from "./itransaction.entity";
 
@@ -6,6 +7,7 @@ interface IAccount {
     balance: number;
     createdAt: Date;
     owner: ICustomer;
+    status: IAccountStatus;
     transactions?: ITransaction[];
 };
 
